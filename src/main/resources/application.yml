@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: "wishlist"
+
+mongo:
+  host: "localhost"
+  port: 27017
+  database: "wishlist"
+  username: "blabla"
+  password: "blabla"
