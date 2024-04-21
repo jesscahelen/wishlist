@@ -1,14 +1,17 @@
 package com.jesscahelen.wishlist.domain.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
 @Builder
+@Document(collection = "clients")
 public class Client {
 
-    UUID id;
+    @Id
+    String clientId;
     Wishlist wishlist;
 }

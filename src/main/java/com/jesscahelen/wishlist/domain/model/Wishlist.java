@@ -1,15 +1,14 @@
 package com.jesscahelen.wishlist.domain.model;
 
+import java.util.Set;
+
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Set;
-import java.util.UUID;
 
 @Data
 @Builder
 public class Wishlist {
 
-    UUID id;
+    String wishlistId;
     Set<Product> products;
 }

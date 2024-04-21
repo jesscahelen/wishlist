@@ -1,10 +1,6 @@
 spring:
   application:
     name: "wishlist"
-
-mongo:
-  host: "localhost"
-  port: 27017
-  database: "wishlist"
-  username: "blabla"
-  password: "blabla"
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/
