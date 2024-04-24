@@ -1,4 +1,4 @@
-package com.jesscahelen.wishlist.config.mongodb;
+package com.jesscahelen.wishlist.vendors.mongodb;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
