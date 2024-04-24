@@ -1,10 +1,12 @@
 package com.jesscahelen.wishlist.entrypoint.http;
 
 import java.util.Set;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,23 +30,33 @@ public class WishlistController {
     }
 
     @GetMapping("/client/{clientId}")
-    public Set<Product> getAllProductsFromClient(@PathVariable String clientId) {
-        return getClientUseCase.getAllProductsFromClient(clientId);
+    public ResponseEntity<Set<Product>> getAllProductsFromClient(@PathVariable String clientId) {
+        return ResponseEntity.ok(getClientUseCase.getAllProductsFromClient(clientId));
     }
 
     @GetMapping("/client/{clientId}/product/{productId}")
-    public Boolean isProductInWishlist(@PathVariable String clientId, @PathVariable String productId) {
-        return getClientUseCase.isProductInWishlist(clientId, productId);
+    public ResponseEntity<Boolean> isProductInWishlist(@PathVariable String clientId, @PathVariable String productId) {
+        return ResponseEntity.ok(getClientUseCase.isProductInWishlist(clientId, productId));
     }
 
     @DeleteMapping("/client/{clientId}/product/{productId}")
-    public String removeProductInWishlist(@PathVariable String clientId, @PathVariable String productId) throws Exception {
-        updateWishlistUseCase.removeProductFromWishlist(clientId, productId);
-        return null;
+    public ResponseEntity<String> removeProductInWishlist(@PathVariable String clientId, @PathVariable String productId) {
+        try {
+            updateWishlistUseCase.removeProductFromWishlist(clientId, productId);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(productId);
     }
 
-    @PostMapping("/")
-    public Wishlist addProductInWishlist(@RequestBody WishlistDTO wishlistDTO) throws Exception {
-        return updateWishlistUseCase.addProductToWishlist(wishlistDTO.getClientId(), wishlistDTO.getProductId());
+    @PutMapping("/")
+    public ResponseEntity<Wishlist> addProductInWishlist(@RequestBody WishlistDTO wishlistDTO) {
+        Wishlist wishlist;
+        try {
+            wishlist = updateWishlistUseCase.addProductToWishlist(wishlistDTO.getClientId(), wishlistDTO.getProductId());
+        } catch (Exception exception) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(wishlist);
     }
 }
