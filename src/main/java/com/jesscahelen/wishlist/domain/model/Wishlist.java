@@ -1,6 +1,6 @@
 package com.jesscahelen.wishlist.domain.model;
 
-import java.util.Set;
+import java.util.HashSet;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,5 +16,5 @@ public class Wishlist {
     @Id
     String wishlistId;
     Client client;
-    Set<Product> products;
+    HashSet<Product> products;
 }

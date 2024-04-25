@@ -23,10 +23,14 @@ test {
 
 jacocoTestReport {
 	dependsOn test
-	reports {
-		xml.required = false
-		csv.required = false
-		html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: ['com/jesscahelen/wishlist/domain/exception/**',
+										'com/jesscahelen/wishlist/domain/model/**',
+										'com/jesscahelen/wishlist/domain/infrastructure/repository/**',
+										'com/jesscahelen/wishlist/vendors/**'
+			])
+		}))
 	}
 }
 
@@ -39,6 +43,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.mockito:mockito-core:5.11.0'
+	testImplementation 'junit:junit:4.13.1'
 }
 
 tasks.named('test') {

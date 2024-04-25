@@ -1,5 +1,6 @@
 package com.jesscahelen.wishlist.domain.usecase;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -18,9 +19,9 @@ public class GetWishlistUseCaseImpl implements GetClientUseCase {
         this.wishlistRepository = wishlistRepository;
     }
 
-    public Set<Product> getAllProductsFromClient(String clientId) {
+    public HashSet<Product> getAllProductsFromClient(String clientId) {
         Wishlist wishlist = wishlistRepository.findByClientId(clientId);
-        return wishlist != null ? wishlist.getProducts() : Set.of();
+        return wishlist != null ? wishlist.getProducts() : new HashSet<>(Set.of());
     }
 
     public Boolean isProductInWishlist(String clientId, String productId) {

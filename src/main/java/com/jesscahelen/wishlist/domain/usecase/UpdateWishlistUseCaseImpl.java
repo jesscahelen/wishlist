@@ -1,5 +1,6 @@
 package com.jesscahelen.wishlist.domain.usecase;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +33,8 @@ public class UpdateWishlistUseCaseImpl implements UpdateWishlistUseCase {
     public void removeProductFromWishlist(String clientId, String productId) throws ProductNotFoundException {
         if (getClientUseCase.isProductInWishlist(clientId, productId)) {
             Wishlist wishlist = getClientUseCase.getWishlistByClientId(clientId);
-            wishlist.getProducts().remove(Product.builder().productId(productId).build());
+            Product product = Product.builder().productId(productId).build();
+            wishlist.getProducts().remove(product);
             wishlistRepository.save(wishlist);
         } else {
             LOGGER.error(String.format("Product id: %s not found in client id: %s wishlist.", productId, clientId));
@@ -54,7 +56,8 @@ public class UpdateWishlistUseCaseImpl implements UpdateWishlistUseCase {
             wishlist = wishlistRepository.findByClientId(clientId);
             wishlist.getProducts().add(createProduct(productId));
         }
-        return wishlistRepository.save(wishlist);
+        wishlistRepository.save(wishlist);
+        return wishlist;
     }
 
     private Wishlist createWishlist(String clientId, String productId) {
@@ -63,9 +66,9 @@ public class UpdateWishlistUseCaseImpl implements UpdateWishlistUseCase {
                 .client(Client.builder()
                         .clientId(clientId)
                         .build())
-                .products(Set.of(Product.builder()
+                .products(new HashSet<>(Set.of(Product.builder()
                         .productId(productId)
-                        .build()))
+                        .build())))
                 .build();
     }
 

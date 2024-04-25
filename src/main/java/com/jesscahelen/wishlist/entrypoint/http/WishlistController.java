@@ -1,6 +1,6 @@
 package com.jesscahelen.wishlist.entrypoint.http;
 
-import java.util.Set;
+import java.util.HashSet;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +30,7 @@ public class WishlistController {
     }
 
     @GetMapping("/client/{clientId}")
-    public ResponseEntity<Set<Product>> getAllProductsFromClient(@PathVariable String clientId) {
+    public ResponseEntity<HashSet<Product>> getAllProductsFromClient(@PathVariable String clientId) {
         return ResponseEntity.ok(getClientUseCase.getAllProductsFromClient(clientId));
     }
 
