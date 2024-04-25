@@ -23,15 +23,6 @@ test {
 
 jacocoTestReport {
 	dependsOn test
-	afterEvaluate {
-		classDirectories.setFrom(files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: ['com/jesscahelen/wishlist/domain/exception/**',
-										'com/jesscahelen/wishlist/domain/model/**',
-										'com/jesscahelen/wishlist/domain/infrastructure/repository/**',
-										'com/jesscahelen/wishlist/vendors/**'
-			])
-		}))
-	}
 }
 
 repositories {
