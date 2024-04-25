@@ -7,5 +7,6 @@ import com.jesscahelen.wishlist.domain.model.Wishlist;
 public interface UpdateWishlistUseCase {
 
     void removeProductFromWishlist(String clientId, String productId) throws ProductNotFoundException;
+
     Wishlist addProductToWishlist(String clientId, String productId) throws FullWishlistException;
 }

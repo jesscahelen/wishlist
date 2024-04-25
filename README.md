@@ -1,6 +1,6 @@
 # Wishlist
 
-Create and manage your wishlist. 
+Create and manage your wishlist.
 
 - Add a product to a client's wishlist
 - Remove a product from the wishlist

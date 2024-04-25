@@ -74,7 +74,7 @@ public class UpdateWishlistUseCaseImpl implements UpdateWishlistUseCase {
 
     private Product createProduct(String productId) {
         return Product.builder()
-                        .productId(productId)
-                        .build();
+                .productId(productId)
+                .build();
     }
 }

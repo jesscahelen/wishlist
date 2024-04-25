@@ -15,7 +15,6 @@ import com.jesscahelen.wishlist.domain.GetClientUseCase;
 import com.jesscahelen.wishlist.domain.UpdateWishlistUseCase;
 import com.jesscahelen.wishlist.domain.exception.FullWishlistException;
 import com.jesscahelen.wishlist.domain.exception.ProductNotFoundException;
-import com.jesscahelen.wishlist.domain.infrastructure.repository.WishlistRepository;
 import com.jesscahelen.wishlist.domain.model.Product;
 import com.jesscahelen.wishlist.domain.model.Wishlist;
 import com.jesscahelen.wishlist.entrypoint.http.dto.WishlistDTO;
