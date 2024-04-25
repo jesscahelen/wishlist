@@ -36,6 +36,7 @@ public class UpdateWishlistUseCaseImpl implements UpdateWishlistUseCase {
             Product product = Product.builder().productId(productId).build();
             wishlist.getProducts().remove(product);
             wishlistRepository.save(wishlist);
+            LOGGER.info(String.format("Product id: %s was removed from wishlist.", productId));
         } else {
             LOGGER.error(String.format("Product id: %s not found in client id: %s wishlist.", productId, clientId));
             throw new ProductNotFoundException("Product not found in client's wishlist.");
@@ -56,6 +57,7 @@ public class UpdateWishlistUseCaseImpl implements UpdateWishlistUseCase {
             wishlist = wishlistRepository.findByClientId(clientId);
             wishlist.getProducts().add(createProduct(productId));
         }
+        LOGGER.info(String.format("Product id: %s was added to wishlist.", productId));
         wishlistRepository.save(wishlist);
         return wishlist;
     }
