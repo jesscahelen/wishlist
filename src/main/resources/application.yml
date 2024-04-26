@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: "wishlist"
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/
