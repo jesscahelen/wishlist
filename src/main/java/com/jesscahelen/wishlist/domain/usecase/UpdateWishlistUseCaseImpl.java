@@ -50,7 +50,8 @@ public class UpdateWishlistUseCaseImpl implements UpdateWishlistUseCase {
             wishlist = createWishlist(clientId, productId);
             LOGGER.info(String.format("Wishlist id: %s created.", wishlist.getWishlistId()));
         } else {
-            if (wishlistRepository.countProductsInWishlistByClientId(clientId) >= 20) {
+            Wishlist wishlistFound = wishlistRepository.findByClientId(clientId);
+            if (wishlistFound.getProducts().size() >= 20) {
                 LOGGER.error(String.format("Client id: %s wishlist has 20 products.", clientId));
                 throw new FullWishlistException("Client's wishlist has 20 products. To add a new product it is necessary to remove an existent one.");
             }

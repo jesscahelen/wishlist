@@ -15,10 +15,11 @@ import com.jesscahelen.wishlist.domain.GetClientUseCase;
 import com.jesscahelen.wishlist.domain.UpdateWishlistUseCase;
 import com.jesscahelen.wishlist.domain.model.Product;
 import com.jesscahelen.wishlist.domain.model.Wishlist;
+import com.jesscahelen.wishlist.entrypoint.http.dto.ProductResponseDTO;
 import com.jesscahelen.wishlist.entrypoint.http.dto.WishlistDTO;
 
 @RestController
-@RequestMapping("wishlist")
+@RequestMapping(value = "wishlist", produces = "application/json")
 public class WishlistController {
 
     private final GetClientUseCase getClientUseCase;
@@ -36,26 +37,38 @@ public class WishlistController {
 
     @GetMapping("/client/{clientId}/product/{productId}")
     public ResponseEntity<Boolean> isProductInWishlist(@PathVariable String clientId, @PathVariable String productId) {
-        return ResponseEntity.ok(getClientUseCase.isProductInWishlist(clientId, productId));
+        return new ResponseEntity<>(getClientUseCase.isProductInWishlist(clientId, productId), HttpStatus.OK);
     }
 
     @DeleteMapping("/client/{clientId}/product/{productId}")
-    public ResponseEntity<String> removeProductInWishlist(@PathVariable String clientId, @PathVariable String productId) {
+    public ResponseEntity<ProductResponseDTO> removeProductInWishlist(@PathVariable String clientId, @PathVariable String productId) {
+        ProductResponseDTO productResponseDTO;
         try {
             updateWishlistUseCase.removeProductFromWishlist(clientId, productId);
         } catch (Exception exception) {
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+            productResponseDTO = ProductResponseDTO.builder()
+                    .failed(productId)
+                    .message(exception.getMessage())
+                    .build();
+            return new ResponseEntity<>(productResponseDTO, HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(productId);
+        productResponseDTO = ProductResponseDTO.builder()
+                .success(productId)
+                .build();
+        return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
     }
 
     @PutMapping("/")
-    public ResponseEntity<Wishlist> addProductInWishlist(@RequestBody WishlistDTO wishlistDTO) {
+    public ResponseEntity<Object> addProductInWishlist(@RequestBody WishlistDTO wishlistDTO) {
         Wishlist wishlist;
         try {
             wishlist = updateWishlistUseCase.addProductToWishlist(wishlistDTO.getClientId(), wishlistDTO.getProductId());
         } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            ProductResponseDTO productResponseDTO = ProductResponseDTO.builder()
+                    .failed(wishlistDTO.getProductId())
+                    .message(exception.getMessage())
+                    .build();
+            return new ResponseEntity<>(productResponseDTO, HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(wishlist);
     }

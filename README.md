@@ -28,6 +28,12 @@ Start mongodb container with docker-compose:
 docker-compose up -d
 ```
 
+Run application:
+
+```bash
+gradle bootRun
+```
+
 Check swagger documentation:
 
 ```

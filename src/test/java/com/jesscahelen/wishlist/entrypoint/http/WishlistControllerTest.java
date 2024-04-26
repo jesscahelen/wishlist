@@ -17,13 +17,13 @@ import com.jesscahelen.wishlist.domain.exception.FullWishlistException;
 import com.jesscahelen.wishlist.domain.exception.ProductNotFoundException;
 import com.jesscahelen.wishlist.domain.model.Product;
 import com.jesscahelen.wishlist.domain.model.Wishlist;
+import com.jesscahelen.wishlist.entrypoint.http.dto.ProductResponseDTO;
 import com.jesscahelen.wishlist.entrypoint.http.dto.WishlistDTO;
 import com.jesscahelen.wishlist.fixtures.WishlistFixture;
 
 import static com.jesscahelen.wishlist.fixtures.WishlistFixture.createWishlistDTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -99,11 +99,14 @@ public class WishlistControllerTest {
     void shouldRemoveProductFromWishlist() {
         String clientId = UUID.randomUUID().toString();
         String productId = UUID.randomUUID().toString();
+        ProductResponseDTO productResponseDTO = ProductResponseDTO.builder()
+                .success(productId)
+                .build();
 
-        ResponseEntity<String> response = wishlistController.removeProductInWishlist(clientId, productId);
+        ResponseEntity<ProductResponseDTO> response = wishlistController.removeProductInWishlist(clientId, productId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(productId, response.getBody());
+        assertEquals(productResponseDTO, response.getBody());
     }
 
     @Test
@@ -111,13 +114,17 @@ public class WishlistControllerTest {
         String clientId = UUID.randomUUID().toString();
         String productId = UUID.randomUUID().toString();
         String errorMessage = "Product not found in client's wishlist.";
+        ProductResponseDTO productResponseDTO = ProductResponseDTO.builder()
+                .failed(productId)
+                .message(errorMessage)
+                .build();
 
         doThrow(new ProductNotFoundException(errorMessage)).when(updateWishlistUseCase).removeProductFromWishlist(clientId, productId);
 
-        ResponseEntity<String> response = wishlistController.removeProductInWishlist(clientId, productId);
+        ResponseEntity<ProductResponseDTO> response = wishlistController.removeProductInWishlist(clientId, productId);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals(errorMessage, response.getBody());
+        assertEquals(productResponseDTO, response.getBody());
     }
 
     @Test
@@ -130,7 +137,7 @@ public class WishlistControllerTest {
 
         when(updateWishlistUseCase.addProductToWishlist(clientId, productId)).thenReturn(wishlist);
 
-        ResponseEntity<Wishlist> response = wishlistController.addProductInWishlist(wishlistDTO);
+        ResponseEntity<Object> response = wishlistController.addProductInWishlist(wishlistDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(wishlist, response.getBody());
@@ -142,12 +149,16 @@ public class WishlistControllerTest {
         String productId = UUID.randomUUID().toString();
         WishlistDTO wishlistDTO = createWishlistDTO(clientId, productId);
         String errorMessage = "Client's wishlist has 20 products. To add a new product it is necessary to remove an existent one.";
+        ProductResponseDTO productResponseDTO = ProductResponseDTO.builder()
+                .failed(productId)
+                .message(errorMessage)
+                .build();
 
         doThrow(new FullWishlistException(errorMessage)).when(updateWishlistUseCase).addProductToWishlist(clientId, productId);
 
-        ResponseEntity<Wishlist> response = wishlistController.addProductInWishlist(wishlistDTO);
+        ResponseEntity<Object> response = wishlistController.addProductInWishlist(wishlistDTO);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNull(response.getBody());
+        assertEquals(productResponseDTO, response.getBody());
     }
 }

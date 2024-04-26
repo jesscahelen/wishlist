@@ -105,7 +105,7 @@ public class UpdateWishlistUseCaseTest {
         String newProductId = UUID.randomUUID().toString();
 
         when(wishlistRepository.existsClientByClientId(clientId)).thenReturn(true);
-        when(wishlistRepository.countProductsInWishlistByClientId(clientId)).thenReturn(20);
+        when(wishlistRepository.findByClientId(clientId)).thenReturn(wishlist);
 
         assertThrows(FullWishlistException.class, () -> wishlistUseCase.addProductToWishlist(clientId, newProductId));
     }

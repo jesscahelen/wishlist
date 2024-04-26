@@ -10,9 +10,6 @@ public interface WishlistRepository extends MongoRepository<Wishlist, String> {
     @Query(value = "{ 'client.clientId' : ?0, 'products.productId' : ?1 }", exists = true)
     boolean existsProductInWishlist(String clientId, String productId);
 
-    @Query(value = "{ 'client.clientId' : ?0 }", fields = "{ 'products' : 1 }", count = true)
-    Integer countProductsInWishlistByClientId(String clientId);
-
     @Query(value = "{ 'client.clientId' : ?0 }", exists = true)
     boolean existsClientByClientId(String clientId);
 
